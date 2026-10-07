@@ -536,9 +536,7 @@
 <script>
 "use strict";
 
-/* =========================================================
-   CONSTANTS
-   ========================================================= */
+/* Constants */
 const COLORS = ["red","green","yellow","blue"];
 const COLOR_HEX = { red:"#e6483f", green:"#2fb861", yellow:"#f4c11f", blue:"#3186f2" };
 let humanColor = "red"; // chosen on the start screen
@@ -590,9 +588,7 @@ const DICE_PIPS = {
   1:[4], 2:[0,8], 3:[0,4,8], 4:[0,2,6,8], 5:[0,2,4,6,8], 6:[0,2,3,5,6,8]
 };
 
-/* =========================================================
-   UTILITIES
-   ========================================================= */
+/* Utilities */
 function rand(n){ return Math.floor(Math.random()*n); }
 function rollDie(){ return 1 + rand(6); }
 function wait(ms){
@@ -615,9 +611,7 @@ function fmtTime(ms){
 }
 function otherColors(color){ return COLORS.filter(c=>c!==color); }
 
-/* =========================================================
-   AUDIO (Web Audio API - no external files)
-   ========================================================= */
+/* Audio (Web Audio API, no external files) */
 const Sound = (() => {
   let ctx = null;
   let on = true;
@@ -656,9 +650,7 @@ const Sound = (() => {
   };
 })();
 
-/* =========================================================
-   GAME STATE
-   ========================================================= */
+/* Game state */
 let state = null;
 
 function freshState(){
@@ -690,9 +682,7 @@ function freshState(){
 
 function currentPlayer(){ return state.players[state.currentIdx]; }
 
-/* =========================================================
-   BOARD GENERATION & RENDERING
-   ========================================================= */
+/* Board generation & rendering */
 const boardEl = document.getElementById("board");
 const tokenEls = {}; // key "color-id" -> element
 
@@ -828,9 +818,7 @@ function renderTokens(){
   });
 }
 
-/* =========================================================
-   RULES / MOVEMENT
-   ========================================================= */
+/* Rules / movement */
 function blockAt(color, absIdx){
   // true if an opposing color has 2+ tokens stacked on this ring cell (uncapturable, blocks landing)
   for(const p of state.players){
@@ -884,9 +872,7 @@ function totalProgress(player, overrideTokenId, overrideSteps){
   },0);
 }
 
-/* =========================================================
-   BOT LOGIC (deterministic weighted heuristic, no search/learning)
-   ========================================================= */
+/* Bot logic (deterministic weighted heuristic, no search/learning) */
 function scoreMove(player, move){
   const token = player.tokens.find(t=>t.id===move.tokenId);
   const oldSteps = token.steps;
@@ -932,9 +918,7 @@ function botChooseMove(player, moves){
   return best;
 }
 
-/* =========================================================
-   ANIMATION
-   ========================================================= */
+/* Animation */
 async function animateMove(player, move){
   const token = player.tokens.find(t=>t.id===move.tokenId);
   const node = tokenEls[`${token.color}-${token.id}`];
@@ -966,9 +950,7 @@ async function animateCapture(token){
   renderTokens();
 }
 
-/* =========================================================
-   STATISTICS + RENDERING (players / dice / log / stats)
-   ========================================================= */
+/* Statistics + rendering (players / dice / log / stats) */
 const playersEl = document.getElementById("players");
 const diceHistoryEl = document.getElementById("diceHistory");
 const logEl = document.getElementById("log");
@@ -1071,9 +1053,7 @@ function renderAll(){
   renderTurnStrip();
 }
 
-/* =========================================================
-   TURN MANAGER
-   ========================================================= */
+/* Turn manager */
 async function rollDiceAction(){
   if(state.phase!=="rolling" || state.gameOver) return;
   const player = currentPlayer();
@@ -1252,9 +1232,7 @@ function endGame(){
   showWinnerOverlay();
 }
 
-/* =========================================================
-   HUMAN INPUT
-   ========================================================= */
+/* Human input */
 function onTokenClick(e){
   const node = e.currentTarget;
   if(!node.classList.contains("legal")) return; // ignore invalid clicks
@@ -1313,9 +1291,7 @@ document.addEventListener("keydown", (e)=>{
   }
 });
 
-/* =========================================================
-   WINNER OVERLAY / THEME / SOUND TOGGLES
-   ========================================================= */
+/* Winner overlay / theme / sound toggles */
 const winnerOverlay = document.getElementById("winnerOverlay");
 function showWinnerOverlay(){
   const ranked = [...state.players].sort((a,b)=>a.finishRank-b.finishRank);
@@ -1347,9 +1323,7 @@ themeBtn.addEventListener("click", ()=>{
 });
 setTheme(window.matchMedia && window.matchMedia("prefers-color-scheme: dark").matches);
 
-/* =========================================================
-   START SCREEN (color selection)
-   ========================================================= */
+/* START SCREEN (color selection) */
 const startOverlay = document.getElementById("startOverlay");
 function showStartOverlay(){ startOverlay.classList.add("show"); }
 function hideStartOverlay(){ startOverlay.classList.remove("show"); }
@@ -1372,9 +1346,7 @@ COLORS.forEach(color=>{
   colorGrid.appendChild(card);
 });
 
-/* =========================================================
-   GAME START / RESET
-   ========================================================= */
+/* Game start / reset */
 let durationInterval = null;
 function startGame(isNewGame){
   state = freshState();
